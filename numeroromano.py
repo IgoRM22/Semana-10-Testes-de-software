@@ -1,27 +1,39 @@
 def converte(numeroEmRomano):
+    # Tabela de conversão de números romanos
+    tabela = {
+        'I': 1,
+        'V': 5,
+        'X': 10,
+        'L': 50,
+        'C': 100,
+        'D': 500,
+        'M': 1000
+    }
 
-    tabela = {}
-    tabela['I'] = 1
-    tabela['V'] = 5
-    tabela['X'] = 10
-    tabela['L'] = 50
-    tabela['C'] = 100
-    tabela['D'] = 500
-    tabela['M'] = 10000
+    # Verificar se o número romano é válido
+    if not numeroEmRomano or any(c not in tabela for c in numeroEmRomano):
+        raise ValueError(f"Entrada inválida: {numeroEmRomano}")
 
     acumulador = 0
     ultimovizinhodireita = 0
+    repeticao = 1
     for i in reversed(range(len(numeroEmRomano))):
-        atual = 0
-        numCorrente = numeroEmRomano[i]
-        if (numCorrente in tabela):
-            atual = tabela[numCorrente]
+        atual = tabela[numeroEmRomano[i]]
 
-        multiplicador = 1
-        if (atual < ultimovizinhodireita):
-            multiplicador = 1
+        # Verificar repetições consecutivas
+        if i > 0 and numeroEmRomano[i] == numeroEmRomano[i - 1]:
+            repeticao += 1
+            if repeticao > 3:
+                raise ValueError(f"Entrada inválida: {numeroEmRomano}")
+        else:
+            repeticao = 1
 
-        acumulador += atual * multiplicador
+        # Adicionar ou subtrair conforme a posição
+        if atual < ultimovizinhodireita:
+            acumulador -= atual
+        else:
+            acumulador += atual
+
         ultimovizinhodireita = atual
 
     return acumulador
